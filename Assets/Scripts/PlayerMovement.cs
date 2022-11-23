@@ -5,10 +5,16 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public KeyCode left;
+    public KeyCode right;
+
     public float speed = 10;
     public float jumpForce = 5;
     public float groundDistance;
     public int airjumps = 1;
+    private bool isJumping;
+    private bool canJump;
+    
 
     private Rigidbody2D rb2D;
     private int remainingJumps;
@@ -22,18 +28,32 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float dir = Input.GetAxis("Horizontal");        
-
-        transform.Translate(transform.right * dir * speed * Time.deltaTime);
-        
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -transform.up, groundDistance);
-
-        if (hit.collider != null) 
+        if (Input.GetKey(left))
         {
-            remainingJumps = airjumps;
+            rb2D.velocity = new Vector2(-speed, rb2D.velocity.y);
+            GetComponent<Animator>().SetBool("Run Left", true);
+        }
+        else if (Input.GetKey(right))
+        {
+            rb2D.velocity = new Vector2(speed, rb2D.velocity.y);
+            GetComponent<Animator>().SetBool("Run Right", true);
+            
+        }
+        else
+        {
+            rb2D.velocity = new Vector2(0, rb2D.velocity.y);
+            GetComponent<Animator>().SetBool("Run Left", false);
+            GetComponent<Animator>().SetBool("Run Right", false);
+            
         }
 
-        if (Input.GetButtonDown("Jump"))
+        if (canJump == true ) 
+        {
+            remainingJumps = airjumps;
+            canJump = false;
+        }
+
+        if (Input.GetButtonDown("Jump") && !isJumping)
         {
             Jump();
         }
@@ -52,5 +72,14 @@ public class PlayerMovement : MonoBehaviour
             remainingJumps--;
             Debug.Log("after jump = " + remainingJumps);
         }       
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            isJumping = false;
+            canJump = true;
+        }
     }
 }
