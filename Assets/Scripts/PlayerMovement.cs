@@ -14,7 +14,8 @@ public class PlayerMovement : MonoBehaviour
     public int airjumps = 1;
     private bool isJumping;
     private bool canJump;
-    
+    public bool facingRight;
+
 
     private Rigidbody2D rb2D;
     private int remainingJumps;
@@ -31,19 +32,24 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(left))
         {
             rb2D.velocity = new Vector2(-speed, rb2D.velocity.y);
-            GetComponent<Animator>().SetBool("Run Left", true);
+            flip();
+
+           // GetComponent<Animator>().SetBool("Run Left", true);
         }
         else if (Input.GetKey(right))
         {
             rb2D.velocity = new Vector2(speed, rb2D.velocity.y);
-            GetComponent<Animator>().SetBool("Run Right", true);
+            flip2();
+
+            //GetComponent<Animator>().SetBool("Run Right", true);
             
         }
         else
         {
             rb2D.velocity = new Vector2(0, rb2D.velocity.y);
-            GetComponent<Animator>().SetBool("Run Left", false);
-            GetComponent<Animator>().SetBool("Run Right", false);
+
+            /*GetComponent<Animator>().SetBool("Run Left", false);
+            GetComponent<Animator>().SetBool("Run Right", false);*/
             
         }
 
@@ -81,5 +87,27 @@ public class PlayerMovement : MonoBehaviour
             isJumping = false;
             canJump = true;
         }
+    }
+
+    void flip()
+    {
+
+        if (facingRight == true)
+        {
+            transform.Rotate(0f, 180f, 0f);
+            facingRight = false;
+        }
+
+    }
+
+    void flip2()
+    {
+
+        if (facingRight == false)
+        {
+            transform.Rotate(0f, 180f, 0f);
+            facingRight = true;
+        }
+
     }
 }
