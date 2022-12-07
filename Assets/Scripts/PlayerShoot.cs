@@ -9,16 +9,33 @@ public class PlayerShoot : MonoBehaviour
 
     public Transform shootingPoint;
     public GameObject bulletPrefab;
-    public float speed, shootTimer;    
-
+    public GameObject bulletPrefab2;
+    public float speed, shootTimer;       
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(shoot) && !isShooting)
+        
+        if (GetComponent<PlayerMovement>().facingRight == true)
         {
-            StartCoroutine(Shoot());            
+            if (Input.GetKeyDown(shoot) && !isShooting)
+            {
+                StartCoroutine(Shoot());
+
+            }
         }
+        if (GetComponent<PlayerMovement>().facingRight == false)
+        {
+            if (Input.GetKeyDown(shoot) && !isShooting)
+            {
+                StartCoroutine(reversedShoot());
+
+            }
+        }
+
+        Destroy(GameObject.Find("Bullet(Clone)"), 3);
+        Destroy(GameObject.Find("Bullet_switch(Clone)"), 3);
+
     }
 
     IEnumerator Shoot()
@@ -28,8 +45,21 @@ public class PlayerShoot : MonoBehaviour
         GameObject newBullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
         newBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(speed * Time.fixedDeltaTime, 0f);        
 
-        yield return new WaitForSeconds(shootTimer);
+        yield return new WaitForSeconds(shootTimer);        
         isShooting = false;
         
     }
+
+    IEnumerator reversedShoot()
+    {
+
+        isShooting = true;
+        GameObject newBullet = Instantiate(bulletPrefab2, shootingPoint.position, Quaternion.identity);
+        newBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(-speed * Time.fixedDeltaTime, 0f);
+
+        yield return new WaitForSeconds(shootTimer);        
+        isShooting = false;
+
+    }    
+
 }

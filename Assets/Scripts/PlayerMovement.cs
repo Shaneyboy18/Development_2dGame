@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
 {
     public KeyCode left;
     public KeyCode right;
+    public KeyCode jump;
+    public KeyCode quit;
 
     public float speed = 10;
     public float jumpForce = 5;
@@ -59,10 +61,11 @@ public class PlayerMovement : MonoBehaviour
             canJump = false;
         }
 
-        if (Input.GetButtonDown("Jump") && !isJumping)
+        if (Input.GetKeyDown(jump) && !isJumping)
         {
             Jump();
         }
+        quitGame();
 
         Debug.DrawRay(transform.position, -transform.up * groundDistance, Color.red);
 
@@ -94,7 +97,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (facingRight == true)
         {
-            transform.Rotate(0f, 180f, 0f);
+            gameObject.transform.localScale = new Vector3(-3, 3, 3);
+            
             facingRight = false;
         }
 
@@ -105,9 +109,18 @@ public class PlayerMovement : MonoBehaviour
 
         if (facingRight == false)
         {
-            transform.Rotate(0f, 180f, 0f);
+            gameObject.transform.localScale = new Vector3(3, 3, 3);
+            
             facingRight = true;
         }
 
+    }
+
+    void quitGame()
+    {
+       if (Input.GetKey(quit))
+        {
+            Application.Quit();
+        }
     }
 }
