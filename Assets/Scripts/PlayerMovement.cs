@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     private bool canJump;
     public bool facingRight;
 
+    private int maxHealth = 25;
+    public int currentHealth;
 
     private Rigidbody2D rb2D;
     private int remainingJumps;
@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>();
         remainingJumps = airjumps;
+        currentHealth = maxHealth;
     }
 
     // Update is called once per frame
@@ -36,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
             rb2D.velocity = new Vector2(-speed, rb2D.velocity.y);
             flip();
 
-           // GetComponent<Animator>().SetBool("Run Left", true);
+            // GetComponent<Animator>().SetBool("Run Left", true);
         }
         else if (Input.GetKey(right))
         {
@@ -44,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
             flip2();
 
             //GetComponent<Animator>().SetBool("Run Right", true);
-            
+
         }
         else
         {
@@ -52,10 +53,10 @@ public class PlayerMovement : MonoBehaviour
 
             /*GetComponent<Animator>().SetBool("Run Left", false);
             GetComponent<Animator>().SetBool("Run Right", false);*/
-            
+
         }
 
-        if (canJump == true ) 
+        if (canJump == true)
         {
             remainingJumps = airjumps;
             canJump = false;
@@ -73,14 +74,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if(remainingJumps > 0)
+        if (remainingJumps > 0)
         {
             Debug.Log("Before jump = " + remainingJumps);
             rb2D.velocity = new Vector2(rb2D.velocity.x, 0);
             rb2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
             remainingJumps--;
             Debug.Log("after jump = " + remainingJumps);
-        }       
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -90,6 +91,10 @@ public class PlayerMovement : MonoBehaviour
             isJumping = false;
             canJump = true;
         }
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(25);
+        }
     }
 
     void flip()
@@ -98,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
         if (facingRight == true)
         {
             gameObject.transform.localScale = new Vector3(-3, 3, 3);
-            
+
             facingRight = false;
         }
 
@@ -110,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         if (facingRight == false)
         {
             gameObject.transform.localScale = new Vector3(3, 3, 3);
-            
+
             facingRight = true;
         }
 
@@ -118,9 +123,21 @@ public class PlayerMovement : MonoBehaviour
 
     void quitGame()
     {
-       if (Input.GetKey(quit))
+        if (Input.GetKey(quit))
         {
             Application.Quit();
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("Taken Damage");
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+            SceneManager.LoadScene("SampleScene");
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
@@ -10,12 +9,12 @@ public class PlayerShoot : MonoBehaviour
     public Transform shootingPoint;
     public GameObject bulletPrefab;
     public GameObject bulletPrefab2;
-    public float speed, shootTimer;       
+    public float speed, shootTimer;
 
     // Update is called once per frame
     void Update()
     {
-        
+
         if (GetComponent<PlayerMovement>().facingRight == true)
         {
             if (Input.GetKeyDown(shoot) && !isShooting)
@@ -43,11 +42,11 @@ public class PlayerShoot : MonoBehaviour
 
         isShooting = true;
         GameObject newBullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
-        newBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(speed * Time.fixedDeltaTime, 0f);        
+        newBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(speed * Time.fixedDeltaTime, 0f);
 
-        yield return new WaitForSeconds(shootTimer);        
+        yield return new WaitForSeconds(shootTimer);
         isShooting = false;
-        
+
     }
 
     IEnumerator reversedShoot()
@@ -57,9 +56,9 @@ public class PlayerShoot : MonoBehaviour
         GameObject newBullet = Instantiate(bulletPrefab2, shootingPoint.position, Quaternion.identity);
         newBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(-speed * Time.fixedDeltaTime, 0f);
 
-        yield return new WaitForSeconds(shootTimer);        
+        yield return new WaitForSeconds(shootTimer);
         isShooting = false;
 
-    }    
+    }
 
 }
