@@ -22,6 +22,9 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb2D;
     private int remainingJumps;
 
+    public AudioSource source;
+    public AudioClip clip;
+
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
@@ -35,24 +38,17 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(left))
         {
             rb2D.velocity = new Vector2(-speed, rb2D.velocity.y);
-            flip();
-
-            // GetComponent<Animator>().SetBool("Run Left", true);
+            flip();            
         }
         else if (Input.GetKey(right))
         {
             rb2D.velocity = new Vector2(speed, rb2D.velocity.y);
-            flip2();
-
-            //GetComponent<Animator>().SetBool("Run Right", true);
+            flip2();          
 
         }
         else
         {
-            rb2D.velocity = new Vector2(0, rb2D.velocity.y);
-
-            /*GetComponent<Animator>().SetBool("Run Left", false);
-            GetComponent<Animator>().SetBool("Run Right", false);*/
+            rb2D.velocity = new Vector2(0, rb2D.velocity.y);           
 
         }
 
@@ -137,6 +133,8 @@ public class PlayerMovement : MonoBehaviour
         if (currentHealth <= 0)
         {
             Destroy(gameObject);
+            source.PlayOneShot(clip);
+            //yield return new WaitForSeconds (2.0f);
             SceneManager.LoadScene("SampleScene");
         }
     }

@@ -11,6 +11,9 @@ public class PlayerShoot : MonoBehaviour
     public GameObject bulletPrefab2;
     public float speed, shootTimer;
 
+    public AudioSource source;
+    public AudioClip clip;
+
     // Update is called once per frame
     void Update()
     {
@@ -20,7 +23,7 @@ public class PlayerShoot : MonoBehaviour
             if (Input.GetKeyDown(shoot) && !isShooting)
             {
                 StartCoroutine(Shoot());
-
+                source.PlayOneShot(clip);
             }
         }
         if (GetComponent<PlayerMovement>().facingRight == false)
@@ -28,7 +31,7 @@ public class PlayerShoot : MonoBehaviour
             if (Input.GetKeyDown(shoot) && !isShooting)
             {
                 StartCoroutine(reversedShoot());
-
+                source.PlayOneShot(clip);
             }
         }
 
